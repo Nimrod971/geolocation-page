@@ -1,66 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Get Location</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Localisations des utilisateurs</title>
+<style>
+    /* Styles CSS pour la mise en page */
+    #locations {
+        margin-top: 20px;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+    }
+</style>
 </head>
 <body>
-    <h1>Share Your Location</h1>
-    <button onclick="getLocation()">Share Location</button>
+    <h1>Localisations des utilisateurs</h1>
+    <div id="locations">
+        <!-- Ici seront affichées les localisations -->
+    </div>
 
+    <!-- Script JavaScript pour récupérer et afficher les localisations -->
     <script>
+        // Fonction pour récupérer et afficher la localisation
         function getLocation() {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(sendLocation, showError);
+                navigator.geolocation.getCurrentPosition(showPosition);
             } else {
-                alert("Geolocation is not supported by this browser.");
+                alert("La géolocalisation n'est pas supportée par votre navigateur.");
             }
         }
 
-        function sendLocation(position) {
-            var lat = position.coords.latitude;
-            var lng = position.coords.longitude;
+        // Fonction pour afficher la position
+        function showPosition(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
 
-            console.log("Latitude: " + lat + ", Longitude: " + lng); // Log des coordonnées
+            // Créer un élément pour afficher la localisation
+            var locationElement = document.createElement("p");
+            locationElement.textContent = "Latitude: " + latitude + ", Longitude: " + longitude;
 
-            // Remplacez l'URL par votre propre serveur
-            var serverUrl = 'http://127.0.0.1:5000/location';
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", serverUrl, true);
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4) {
-                    if (xhr.status == 200) {
-                        console.log("Location sent successfully!");
-                        console.log("Response from server: " + xhr.responseText);
-                        alert("Location sent!");
-                    } else {
-                        console.error("Error: " + xhr.status);
-                        alert("Error sending location: " + xhr.status);
-                    }
-                }
-            };
-            xhr.send(JSON.stringify({
-                latitude: lat,
-                longitude: lng
-            }));
+            // Ajouter l'élément à la liste des localisations
+            document.getElementById("locations").appendChild(locationElement);
         }
 
-        function showError(error) {
-            switch(error.code) {
-                case error.PERMISSION_DENIED:
-                    alert("User denied the request for Geolocation.");
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    alert("Location information is unavailable.");
-                    break;
-                case error.TIMEOUT:
-                    alert("The request to get user location timed out.");
-                    break;
-                case error.UNKNOWN_ERROR:
-                    alert("An unknown error occurred.");
-                    break;
-            }
-        }
+        // Appel initial pour obtenir la localisation au chargement de la page
+        getLocation();
     </script>
 </body>
 </html>
