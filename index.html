@@ -15,36 +15,53 @@
 </head>
 <body>
     <h1>Localisations des utilisateurs</h1>
+
+    <!-- Champ de saisie pour le nom et bouton de confirmation -->
+    <div>
+        <label for="name">Entrez votre nom :</label>
+        <input type="text" id="name" placeholder="Votre nom">
+        <button onclick="submitName()">Confirmer</button>
+    </div>
+
     <div id="locations">
         <!-- Ici seront affichées les localisations -->
     </div>
 
     <!-- Script JavaScript pour récupérer et afficher les localisations -->
     <script>
-        // Fonction pour récupérer et afficher la localisation
-        function getLocation() {
+        // Fonction pour récupérer et afficher la localisation avec le nom de l'utilisateur
+        function submitName() {
+            var name = document.getElementById("name").value;
+            if (name) {
+                getLocation(name);
+            } else {
+                alert("Veuillez entrer votre nom.");
+            }
+        }
+
+        // Fonction pour récupérer la localisation
+        function getLocation(name) {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    showPosition(position, name);
+                });
             } else {
                 alert("La géolocalisation n'est pas supportée par votre navigateur.");
             }
         }
 
-        // Fonction pour afficher la position
-        function showPosition(position) {
+        // Fonction pour afficher la position avec le nom
+        function showPosition(position, name) {
             var latitude = position.coords.latitude;
             var longitude = position.coords.longitude;
 
-            // Créer un élément pour afficher la localisation
+            // Créer un élément pour afficher la localisation avec le nom
             var locationElement = document.createElement("p");
-            locationElement.textContent = "Latitude: " + latitude + ", Longitude: " + longitude;
+            locationElement.textContent = name + " - Latitude: " + latitude + ", Longitude: " + longitude;
 
             // Ajouter l'élément à la liste des localisations
             document.getElementById("locations").appendChild(locationElement);
         }
-
-        // Appel initial pour obtenir la localisation au chargement de la page
-        getLocation();
     </script>
 </body>
 </html>
