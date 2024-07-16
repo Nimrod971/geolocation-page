@@ -29,7 +29,10 @@
 
     <!-- Script JavaScript pour récupérer et afficher les localisations -->
     <script>
-        // Fonction pour récupérer et afficher la localisation avec le nom de l'utilisateur
+        document.addEventListener("DOMContentLoaded", (event) => {
+            loadLocations();
+        });
+
         function submitName() {
             var name = document.getElementById("name").value;
             if (name) {
@@ -39,7 +42,6 @@
             }
         }
 
-        // Fonction pour récupérer la localisation
         function getLocation(name) {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
@@ -50,16 +52,36 @@
             }
         }
 
-        // Fonction pour afficher la position avec le nom
         function showPosition(position, name) {
             var latitude = position.coords.latitude;
             var longitude = position.coords.longitude;
 
-            // Créer un élément pour afficher la localisation avec le nom
-            var locationElement = document.createElement("p");
-            locationElement.textContent = name + " - Latitude: " + latitude + ", Longitude: " + longitude;
+            var locationData = {
+                name: name,
+                latitude: latitude,
+                longitude: longitude
+            };
 
-            // Ajouter l'élément à la liste des localisations
+            saveLocation(locationData);
+            appendLocation(locationData);
+        }
+
+        function saveLocation(locationData) {
+            var locations = JSON.parse(localStorage.getItem("locations")) || [];
+            locations.push(locationData);
+            localStorage.setItem("locations", JSON.stringify(locations));
+        }
+
+        function loadLocations() {
+            var locations = JSON.parse(localStorage.getItem("locations")) || [];
+            locations.forEach(location => {
+                appendLocation(location);
+            });
+        }
+
+        function appendLocation(locationData) {
+            var locationElement = document.createElement("p");
+            locationElement.textContent = locationData.name + " - Latitude: " + locationData.latitude + ", Longitude: " + locationData.longitude;
             document.getElementById("locations").appendChild(locationElement);
         }
     </script>
