@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Get Location</title>
+</head>
+<body>
+    <h1>Share Your Location</h1>
+    <button onclick="getLocation()">Share Location</button>
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(sendLocation, showError);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function sendLocation(position) {
+            var lat = position.coords.latitude;
+            var lng = position.coords.longitude;
+
+            // Remplacez l'URL par votre propre serveur
+            var serverUrl = 'https://example.com/location';
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", serverUrl, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    alert("Location sent!");
+                }
+            };
+            xhr.send(JSON.stringify({
+                latitude: lat,
+                longitude: lng
+            }));
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("User denied the request for Geolocation.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("An unknown error occurred.");
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>
