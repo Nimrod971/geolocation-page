@@ -21,7 +21,7 @@
             var lng = position.coords.longitude;
 
             // Remplacez l'URL par votre propre serveur
-            var serverUrl = 'https://example.com/location';
+            var serverUrl = 'http://127.0.0.1:5000/location';
             var xhr = new XMLHttpRequest();
             xhr.open("POST", serverUrl, true);
             xhr.setRequestHeader("Content-Type", "application/json");
